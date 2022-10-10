@@ -9,7 +9,7 @@ from plotly import graph_objs as go
 
 
 Data_Inicio = '2017-01-01'
-Data_Fim = date.today().strftime('%Y-%M-%d')
+Data_Fim = date.today().strftime('%Y-%m-%d')
 
 # TRABALHANDO COM STREAMLIT
 st.title('Analise de Ações')
@@ -21,14 +21,16 @@ st.sidebar.header('Escolha a ação')
 # SLIDER É O COMPONENTE PARA DEFINIR QUANTOS DIAS A PREVISÃO
 n_dias = st.slider('Quantidade de dias de previsão', 30, 365)
 
+
+path = 'acoes.csv'
 # FUNÇÃO BUSCA O NOME DA AÇÃO E O TICKET DA AÇÃO
-# ESTA SENDO CONCATENADO O NOME DA AÇÃO COM O TECKET DA MESMA PARA SE A PESSOA SOUBER O NOME OU O TICKET FIQUE MAIS FACIL IDENTIFICAR A AÇÃO.
-def pegar_dados_acoes():
-    path = 'https://drive.google.com/file/d/1EQp5u_v0IkdoROp8_FbD6hr_JtYxuA64/view?usp=sharing'
+# ESTA SENDO CONCATENADO O NOME DA AÇÃO COM O TICKET DA MESMA PARA SE A PESSOA SOUBER O NOME OU O TICKET FIQUE MAIS FACIL IDENTIFICAR A AÇÃO.
+def pegar_dados_acoes(path):
+    #path = 'https://drive.google.com/file/d/1EQp5u_v0IkdoROp8_FbD6hr_JtYxuA64/view?usp=sharing'
     return pd.read_csv(path, delimiter=';')
 
 # CHAMANDO A FUNÇÃO
-df = pegar_dados_acoes()
+df = pegar_dados_acoes(path)
 
 # BUSCANDO A AÇÃO
 acao = df['snome']
@@ -59,25 +61,23 @@ st.subheader('Tabela de valores - ' + nome_acao_escolhida)
 st.write(df_valores.tail(10))
 
 # CRIANDO O GRAFICO
-st.subheader('Graficos de preços')
+st.subheader('Gráfico de preços')
 fig = go.Figure()
-fig.add_trace(go.Scatter(x = df_valores['Date'],
-                         y = df_valores['Close'],
-                         nome = 'Preço Fechamento',
-                         Line_color = 'yellow'))
-
-fig.add_trace(go.Scatter(x = df_valores['Date'],
-                         y = df_valores['Open'],
-                         nome = 'Preço Abertura',
-                         Line_color = 'blue'))
-
+fig.add_trace(go.Scatter(x=df_valores['Date'],
+                         y=df_valores['Close'],
+                         name='Preco Fechamento',
+                         line_color='yellow'))
+fig.add_trace(go.Scatter(x=df_valores['Date'],
+                         y=df_valores['Open'],
+                         name='Preco Abertura',
+                         line_color='blue'))
 st.plotly_chart(fig)
 
 # REALIZANDO A PREVISÃO DE FECHAMENTO
 df_treino = df_valores[['Date', 'Close']]
 
 # RENOMEANDO AS COLUNAS PARA TRABALHAR COM PROPHET
-df_treino = df_treino.rename(colluns = {'Date' : 'ds', 'Close' : 'y' })
+df_treino = df_treino.rename(columns = {'Date' : 'ds', 'Close' : 'y' })
 
 # CRIANDO UM MODELO
 modelo = Prophet()

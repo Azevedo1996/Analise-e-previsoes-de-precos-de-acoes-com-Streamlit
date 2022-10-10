@@ -22,7 +22,7 @@ st.sidebar.header('Escolha a ação')
 n_dias = st.slider('Quantidade de dias de previsão', 30, 365)
 
 
-path = 'acoes.csv'
+path = 'G:/Meu Drive/codifike/56-stremalit com prophet/acoes.csv'
 # FUNÇÃO BUSCA O NOME DA AÇÃO E O TICKET DA AÇÃO
 # ESTA SENDO CONCATENADO O NOME DA AÇÃO COM O TICKET DA MESMA PARA SE A PESSOA SOUBER O NOME OU O TICKET FIQUE MAIS FACIL IDENTIFICAR A AÇÃO.
 def pegar_dados_acoes(path):
